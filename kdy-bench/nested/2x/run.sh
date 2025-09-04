@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+BASE="$(dirname "$(readlink -f "$0")")"
+source $BASE/../../config
+
 # Default values
 isgpu=true
 
@@ -27,24 +30,22 @@ fi
 
 # Example usage
 if [[ "$isgpu" == "true" ]]; then
-  PARAMS_FILE="/home/ssm-user/kdy-bench/nested/2x/osb-config.json"
+  PARAMS_FILE="$BASE/osb-config.json"
   RESULT_FILE="results.csv"
 else
-  PARAMS_FILE="/home/ssm-user/kdy-bench/nested/2x/cpu-osb-config.json"
+  PARAMS_FILE="$BASE/cpu-osb-config.json"
   RESULT_FILE="cpu-results.csv"
 fi
-
-TARGET_HOST="https://search-kdy-gpu-fp16-e2e-3-sttl7anaglpqvonpjt7smc5cfu.us-west-2.es-staging.amazonaws.com" # baseline
 
 opensearch-benchmark execute-test \
         --pipeline=benchmark-only \
         --workload=vectorsearch \
-        --target-host="${TARGET_HOST}" \
+        --target-host="${OPENSEARCH_HOST}" \
         --workload-params ${PARAMS_FILE} \
         --results-format=csv \
         --results-file=${RESULT_FILE} \
         --pipeline benchmark-only \
-        --client-options="basic_auth_user:'pfUser',basic_auth_password:'pfUser@123',max_retries:5,retry_on_timeout:true,retry_on_error:True,timeout:900" \
+        --client-options="$OSB_CLIENT_OPT" \
         --kill-running-processes
 
 # For search only performance bench

@@ -1,0 +1,4 @@
+OPENSEARCH_HOST=
+# For --client-options="basic_auth_user:'pfUser',basic_auth_password:'pfUser@123',max_retries:5,retry_on_timeout:true,retry_on_error:True,timeout:900"
+OSB_CLIENT_OPT=
+# PWD="-u pfUser:pfUser@123"
